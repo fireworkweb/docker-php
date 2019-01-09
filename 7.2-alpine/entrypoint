@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+# Run as current user
+if [ ! -z "$ASUSER" ]; then
+    usermod -u $ASUSER developer
+fi
+
+if [ "$1" = "php-fpm" ]; then
+    exec "$@"
+    exit $?
+fi
+
+exec su-exec $ASUSER "$@"
