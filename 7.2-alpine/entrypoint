@@ -2,7 +2,7 @@
 set -e
 
 # Run as current user
-if [ ! -z "$ASUSER" ]; then
+if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
     usermod -u $ASUSER developer
 fi
 
