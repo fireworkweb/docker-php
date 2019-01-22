@@ -2,15 +2,9 @@
 set -e
 
 # Run as current user
-if [ ! -z "$ASUSER" ]; then
+if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
     usermod -u $ASUSER developer
 fi
-
-# Ensure /.composer exists and is writable
-if [ ! -d /.composer ]; then
-    mkdir /.composer
-fi
-chmod -R ugo+rw /.composer
 
 if [ "$1" = "php-fpm" ]; then
     exec "$@"
