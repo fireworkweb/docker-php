@@ -11,4 +11,4 @@ if [ "$1" = "php-fpm" ]; then
     exit $?
 fi
 
-exec su-exec $ASUSER "$@"
+exec su-exec developer "$@"
