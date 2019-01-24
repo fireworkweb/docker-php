@@ -15,6 +15,7 @@ RUN apk add --no-cache su-exec bash git openssh-client icu libpng freetype libjp
         gd \
         intl \
         mbstring \
+        pcntl \
         pdo \
         pdo_mysql \
         readline \
