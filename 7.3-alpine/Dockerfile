@@ -3,7 +3,7 @@ FROM php:7.3-fpm-alpine
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ARG ASUSER
 
-WORKDIR /var/www/html
+WORKDIR /app
 
 RUN apk add --no-cache su-exec bash git openssh-client icu libpng freetype libjpeg-turbo libzip-dev shadow \
     && apk add --no-cache --virtual build-dependencies icu-dev libxml2-dev freetype-dev \
