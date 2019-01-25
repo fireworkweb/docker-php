@@ -8,7 +8,6 @@ fi
 
 if [ "$1" = "php-fpm" ]; then
     exec "$@"
-    exit $?
+else
+    exec su-exec developer "$@"
 fi
-
-exec su-exec developer "$@"

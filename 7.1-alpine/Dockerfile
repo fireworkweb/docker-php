@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-alpine
+FROM php:7.1-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ARG ASUSER
@@ -15,7 +15,6 @@ RUN apk update && apk add su-exec bash git openssh-client icu libpng freetype li
         gd \
         intl \
         mbstring \
-        pcntl \
         pdo \
         pdo_mysql \
         readline \

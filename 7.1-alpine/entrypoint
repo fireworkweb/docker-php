@@ -11,3 +11,4 @@ if [ "$1" = "php-fpm" ]; then
 else
     exec su-exec developer "$@"
 fi
+
