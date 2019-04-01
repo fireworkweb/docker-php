@@ -21,9 +21,12 @@ RUN apk update && apk add su-exec bash git openssh-client icu libpng freetype li
         soap \
         xml \
         zip \
+    && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
     && apk del build-dependencies \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/cache/apk/* /tmp/* /src
+
+COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
 
 RUN adduser -D -u 1337 developer && \
     sed -i "s/user\ \=.*/user\ \= developer/g" /usr/local/etc/php-fpm.d/www.conf && \
