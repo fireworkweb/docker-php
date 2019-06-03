@@ -5,7 +5,7 @@ ARG ASUSER
 
 WORKDIR /app
 
-RUN apk update && apk add su-exec bash git openssh-client icu libpng freetype libjpeg-turbo libzip-dev shadow \
+RUN apk update && apk add su-exec bash git openssh-client icu libpng freetype libjpeg-turbo libzip-dev shadow procps \
     && apk add --virtual build-dependencies icu-dev libxml2-dev freetype-dev \
         libpng-dev libjpeg-turbo-dev g++ make autoconf libsodium-dev libedit-dev curl-dev \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
