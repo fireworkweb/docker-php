@@ -12,6 +12,7 @@ RUN apk update && apk add su-exec bash git openssh-client icu libpng freetype li
     && docker-php-ext-install -j$(nproc) \
         bcmath \
         curl \
+        exif \
         gd \
         intl \
         mbstring \
