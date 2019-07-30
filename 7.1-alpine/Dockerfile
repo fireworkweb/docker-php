@@ -2,6 +2,7 @@ FROM php:7.1-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ARG ASUSER
+ARG ENABLE_XDEBUG=false
 
 WORKDIR /app
 
@@ -32,6 +33,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
+    && pecl install xdebug \
     && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
