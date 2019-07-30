@@ -17,5 +17,5 @@ before_script:
   - docker build -t fireworkweb/app:$DOCKER_IMAGE-wkhtmltopdf $DOCKER_IMAGE-wkhtmltopdf
 
 script:
-  - docker run -it --rm $DOCKER_IMAGE php -v
-  - docker run -it --rm $DOCKER_IMAGE-wkhtmltopdf php -v
+  - docker run -it --rm fireworkweb/app:$DOCKER_IMAGE php -v
+  - docker run -it --rm fireworkweb/app:$DOCKER_IMAGE-wkhtmltopdf php -v
