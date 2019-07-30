@@ -7,6 +7,7 @@ WORKDIR /app
 
 RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         freetype libpng libjpeg-turbo libzip-dev imagemagick \
+        jpegoptim optipng pngquant gifsicle \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
         freetype-dev libpng-dev libjpeg-turbo-dev \
         icu-dev libedit-dev libxml2-dev \
