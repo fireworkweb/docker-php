@@ -1,0 +1,31 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@master
+
+    - name: Build docker images
+      run: ./build.sh
+
+    - name: Test docker images
+      run: |
+        for image in 7.1-alpine 7.2-alpine 7.3-alpine; do
+          echo "Running on image $image";
+
+          docker run fireworkweb/app:$image php -v;
+          docker run fireworkweb/app:$image composer -V;
+          docker run -e ASUSER=1000 fireworkweb/app:$image php -v;
+          docker run -e ASUSER=1000 fireworkweb/app:$image composer -V;
+          docker run -e ENABLE_XDEBUG=true fireworkweb/app:$image php -v;
+          docker run -e ENABLE_XDEBUG=true fireworkweb/app:$image composer -V;
+
+          docker run fireworkweb/app:$image-wkhtmltopdf wkhtmltopdf -V;
+          docker run -e ASUSER=1000 fireworkweb/app:$image-wkhtmltopdf wkhtmltopdf -V;
+          docker run -e ENABLE_XDEBUG=true fireworkweb/app:$image-wkhtmltopdf wkhtmltopdf -V;
+        done
