@@ -15,7 +15,7 @@ jobs:
 
     - name: Test docker images
       run: |
-        for image in 7.1-alpine 7.2-alpine 7.3-alpine; do
+        for image in 7.1-alpine 7.2-alpine 7.3-alpine 7.4-alpine; do
           echo "Running on image $image";
 
           docker run fireworkweb/app:$image php -v;
