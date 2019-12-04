@@ -8,11 +8,11 @@ WORKDIR /app
 
 RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         freetype libpng libjpeg-turbo libzip-dev imagemagick \
-        jpegoptim optipng pngquant gifsicle \
+        jpegoptim optipng pngquant gifsicle libldap \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
         freetype-dev libpng-dev libjpeg-turbo-dev \
         icu-dev libedit-dev libxml2-dev \
-        imagemagick-dev oniguruma-dev \
+        imagemagick-dev openldap-dev oniguruma-dev \
     && docker-php-ext-configure gd \
         --with-freetype-dir=/usr/include/ \
         --with-png-dir=/usr/include/ \
@@ -25,6 +25,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         exif \
         gd \
         intl \
+        ldap \
         mbstring \
         pcntl \
         pdo \
