@@ -18,7 +18,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         --with-png-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    && pecl install -o -f xdebug imagick-3.4.4 redis \
+    && pecl install imagick-3.4.4 xdebug redis \
     && docker-php-ext-enable imagick redis \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
@@ -37,7 +37,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
     && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm -rf /var/cache/apk/* /tmp/* /src /tmp/pear
+    && rm -rf /var/cache/apk/* /tmp/* /src
 
 COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
 
