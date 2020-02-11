@@ -1,0 +1,141 @@
+{
+    "output": ".",
+    "builds": [
+        {
+            "name": "7.1-alpine",
+            "data": {
+                "from": "php:7.1-fpm-alpine",
+                "version": "7.1"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile"
+                },
+                {
+                    "name": "entrypoint",
+                    "path": "template/entrypoint"
+                },
+                {
+                    "name": "fwd.ini",
+                    "path": "template/fwd-ini"
+                }
+            ]
+        },
+        {
+            "name": "7.1-alpine-wkhtmltopdf",
+            "data": {
+                "from": "fireworkweb/app:7.1-alpine",
+                "version": "7.1"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
+                }
+            ]
+        },
+        {
+            "name": "7.2-alpine",
+            "data": {
+                "from": "php:7.2-fpm-alpine",
+                "version": "7.2"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile"
+                },
+                {
+                    "name": "entrypoint",
+                    "path": "template/entrypoint"
+                },
+                {
+                    "name": "fwd.ini",
+                    "path": "template/fwd-ini"
+                }
+            ]
+        },
+        {
+            "name": "7.2-alpine-wkhtmltopdf",
+            "data": {
+                "from": "fireworkweb/app:7.2-alpine",
+                "version": "7.2"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
+                }
+            ]
+        },
+        {
+            "name": "7.3-alpine",
+            "data": {
+                "from": "php:7.3-fpm-alpine",
+                "version": "7.3"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile"
+                },
+                {
+                    "name": "entrypoint",
+                    "path": "template/entrypoint"
+                },
+                {
+                    "name": "fwd.ini",
+                    "path": "template/fwd-ini"
+                }
+            ]
+        },
+        {
+            "name": "7.3-alpine-wkhtmltopdf",
+            "data": {
+                "from": "fireworkweb/app:7.3-alpine",
+                "version": "7.3"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
+                }
+            ]
+        },
+        {
+            "name": "7.4-alpine",
+            "data": {
+                "from": "php:7.4-fpm-alpine",
+                "version": "7.4"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile"
+                },
+                {
+                    "name": "entrypoint",
+                    "path": "template/entrypoint"
+                },
+                {
+                    "name": "fwd.ini",
+                    "path": "template/fwd-ini"
+                }
+            ]
+        },
+        {
+            "name": "7.4-alpine-wkhtmltopdf",
+            "data": {
+                "from": "fireworkweb/app:7.4-alpine",
+                "version": "7.4"
+            },
+            "files": [
+                {
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
+                }
+            ]
+        }
+    ]
+}
