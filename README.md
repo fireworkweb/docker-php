@@ -48,6 +48,10 @@ app:
 **ASUSER**: Changes the user id that executes the commands
 **ENABLE_XDEBUG**: Enables the Xdebug extension
 
+### Contributing
+
+You should only change `fwd-template.json` and `template` folder, after you do your changes run `fwd template` compile the template and generate all version folder / files.
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
