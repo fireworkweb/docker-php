@@ -2,7 +2,9 @@ FROM {{ $from }}
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ARG ASUSER
+@unless ($prod)
 ARG ENABLE_XDEBUG=false
+@endunless
 
 WORKDIR /app
 

@@ -5,27 +5,24 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [7.1, 7.1-prod, 7.2, 7.2-prod, 7.3, 7.3-prod, 7.4, 7.4-prod]
 
     steps:
     - name: Checkout code
       uses: actions/checkout@master
 
-    - name: Build docker images
-      run: ./build.sh
+    - name: Build image
+      run: docker build --pull -t fireworkweb/php:${{ matrix.version }} ${{ matrix.version }}
 
     - name: Test docker images
       run: |
-        for image in 7.1 7.1-prod 7.2 7.2-prod 7.3 7.3-prod 7.4 7.4-prod; do
-          echo "Running on image $image";
+        docker run fireworkweb/php:${{ matrix.version }} php -v
+        docker run fireworkweb/php:${{ matrix.version }} composer -V
+        docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} php -v
+        docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} composer -V
 
-          docker run fireworkweb/php:$image php -v;
-          docker run fireworkweb/php:$image composer -V;
-          docker run -e ASUSER=1000 fireworkweb/php:$image php -v;
-          docker run -e ASUSER=1000 fireworkweb/php:$image composer -V;
-          docker run -e ENABLE_XDEBUG=true fireworkweb/php:$image php -v;
-          docker run -e ENABLE_XDEBUG=true fireworkweb/php:$image composer -V;
-
-          docker run fireworkweb/php:$image-wkhtmltopdf wkhtmltopdf -V;
-          docker run -e ASUSER=1000 fireworkweb/php:$image-wkhtmltopdf wkhtmltopdf -V;
-          docker run -e ENABLE_XDEBUG=true fireworkweb/php:$image-wkhtmltopdf wkhtmltopdf -V;
-        done
+      # if not prod
+      # docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} php -v
+      # docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} composer -V
