@@ -13,11 +13,11 @@ fi
 
 # Run as current user
 if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
-    usermod -u $ASUSER developer
+    usermod -u $ASUSER fwd
 fi
 
 if [ "$1" = "php-fpm" ]; then
     exec "$@"
 else
-    exec su-exec developer "$@"
+    exec su-exec fwd "$@"
 fi

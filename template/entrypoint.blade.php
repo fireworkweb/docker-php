@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+@unless ($prod)
 if [ "$ENABLE_XDEBUG" == "true" ]; then
     docker-php-ext-enable xdebug >> /dev/null 2>&1
 
@@ -10,14 +11,15 @@ if [ "$ENABLE_XDEBUG" == "true" ]; then
         exit 1
     fi
 fi
+@endunless
 
 # Run as current user
 if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
-    usermod -u $ASUSER developer
+    usermod -u $ASUSER fwd
 fi
 
 if [ "$1" = "php-fpm" ]; then
     exec "$@"
 else
-    exec su-exec developer "$@"
+    exec su-exec fwd "$@"
 fi

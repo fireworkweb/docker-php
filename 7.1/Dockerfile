@@ -27,6 +27,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         intl \
         ldap \
         mbstring \
+        opcache \
         pcntl \
         pdo \
         pdo_mysql \
@@ -41,9 +42,9 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
 
 COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
 
-RUN adduser -D -u 1337 developer && \
-    sed -i "s/user\ \=.*/user\ \= developer/g" /usr/local/etc/php-fpm.d/www.conf && \
-    su-exec developer composer global require hirak/prestissimo
+RUN adduser -D -u 1337 fwd && \
+    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
+    su-exec fwd composer global require hirak/prestissimo
 
 COPY entrypoint /entrypoint
 RUN chmod +x /entrypoint

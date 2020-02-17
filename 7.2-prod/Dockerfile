@@ -27,6 +27,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         intl \
         ldap \
         mbstring \
+        opcache \
         pcntl \
         pdo \
         pdo_mysql \
@@ -34,16 +35,16 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
-    && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
+    && cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/cache/apk/* /tmp/* /src
 
 COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
 
-RUN adduser -D -u 1337 developer && \
-    sed -i "s/user\ \=.*/user\ \= developer/g" /usr/local/etc/php-fpm.d/www.conf && \
-    su-exec developer composer global require hirak/prestissimo
+RUN adduser -D -u 1337 fwd && \
+    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
+    su-exec fwd composer global require hirak/prestissimo
 
 COPY entrypoint /entrypoint
 RUN chmod +x /entrypoint
