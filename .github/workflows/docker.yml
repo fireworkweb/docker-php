@@ -15,17 +15,17 @@ jobs:
 
     - name: Test docker images
       run: |
-        for image in 7.1-alpine 7.2-alpine 7.3-alpine 7.4-alpine; do
+        for image in 7.1 7.1-prod 7.2 7.2-prod 7.3 7.3-prod 7.4 7.4-prod; do
           echo "Running on image $image";
 
-          docker run fireworkweb/app:$image php -v;
-          docker run fireworkweb/app:$image composer -V;
-          docker run -e ASUSER=1000 fireworkweb/app:$image php -v;
-          docker run -e ASUSER=1000 fireworkweb/app:$image composer -V;
-          docker run -e ENABLE_XDEBUG=true fireworkweb/app:$image php -v;
-          docker run -e ENABLE_XDEBUG=true fireworkweb/app:$image composer -V;
+          docker run fireworkweb/php:$image php -v;
+          docker run fireworkweb/php:$image composer -V;
+          docker run -e ASUSER=1000 fireworkweb/php:$image php -v;
+          docker run -e ASUSER=1000 fireworkweb/php:$image composer -V;
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:$image php -v;
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:$image composer -V;
 
-          docker run fireworkweb/app:$image-wkhtmltopdf wkhtmltopdf -V;
-          docker run -e ASUSER=1000 fireworkweb/app:$image-wkhtmltopdf wkhtmltopdf -V;
-          docker run -e ENABLE_XDEBUG=true fireworkweb/app:$image-wkhtmltopdf wkhtmltopdf -V;
+          docker run fireworkweb/php:$image-wkhtmltopdf wkhtmltopdf -V;
+          docker run -e ASUSER=1000 fireworkweb/php:$image-wkhtmltopdf wkhtmltopdf -V;
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:$image-wkhtmltopdf wkhtmltopdf -V;
         done
