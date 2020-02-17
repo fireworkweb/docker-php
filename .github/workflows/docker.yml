@@ -24,4 +24,4 @@ jobs:
         docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} composer -V
 
         docker run fireworkweb/php:${{ matrix.version }} php -m
-        docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} php -m xdebug | grep xdebug
+        docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} php -m

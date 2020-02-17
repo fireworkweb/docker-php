@@ -18,7 +18,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         --with-png-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    && pecl install imagick-3.4.4 xdebug redis \
+    && pecl install imagick-3.4.4 redis xdebug \
     && docker-php-ext-enable imagick redis \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
