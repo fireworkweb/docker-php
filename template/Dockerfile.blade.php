@@ -33,7 +33,9 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         intl \
         ldap \
         mbstring \
+@if ($prod)
         opcache \
+@endif
         pcntl \
         pdo \
         pdo_mysql \

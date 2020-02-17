@@ -38,9 +38,4 @@ opcache.validate_timestamps=0
 ; If disabled, all PHPDoc comments are dropped from the code to reduce the
 ; size of the optimized code.
 opcache.save_comments=1
-@else
-[opcache]
-
-; Determines if Zend OPCache is enabled
-opcache.enable=0
 @endif
