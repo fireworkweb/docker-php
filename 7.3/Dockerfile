@@ -1,4 +1,4 @@
-FROM php:7.2-fpm-alpine
+FROM php:7.3-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ARG ASUSER
@@ -18,7 +18,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         --with-png-dir=/usr/include/ \
         --with-jpeg-dir=/usr/include/ \
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    && pecl install imagick-3.4.4 xdebug redis \
+    && pecl install imagick-3.4.4 redis xdebug \
     && docker-php-ext-enable imagick redis \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
@@ -41,9 +41,9 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
 
 COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
 
-RUN adduser -D -u 1337 developer && \
-    sed -i "s/user\ \=.*/user\ \= developer/g" /usr/local/etc/php-fpm.d/www.conf && \
-    su-exec developer composer global require hirak/prestissimo
+RUN adduser -D -u 1337 fwd && \
+    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
+    su-exec fwd composer global require hirak/prestissimo
 
 COPY entrypoint /entrypoint
 RUN chmod +x /entrypoint
