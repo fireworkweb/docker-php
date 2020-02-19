@@ -31,4 +31,3 @@ listen = /run/php-fpm.sock
 ;                 mode is set to 0660
 listen.owner = fwd
 listen.group = www-data
-
