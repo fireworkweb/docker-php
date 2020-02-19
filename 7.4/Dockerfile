@@ -31,15 +31,15 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
-    && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
+    && cp "/usr/local/etc/php/php.ini-development" "/usr/local/etc/php/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/cache/apk/* /tmp/* /src
 
-COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
+COPY fwd.ini /usr/local/etc/php/conf.d/fwd.ini
+COPY zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 RUN adduser -D -u 1337 fwd && \
-    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
     su-exec fwd composer global require hirak/prestissimo
 
 COPY entrypoint /entrypoint

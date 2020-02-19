@@ -8,7 +8,8 @@ ARG ENABLE_XDEBUG=false
 
 WORKDIR /app
 
-RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
+RUN adduser -D -u 1337 fwd \
+    && apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         freetype libpng libjpeg-turbo libzip-dev imagemagick \
         jpegoptim optipng pngquant gifsicle libldap \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
@@ -43,16 +44,14 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
-    && cp "$PHP_INI_DIR/php.ini-{{ $prod ? 'production' : 'development' }}" "$PHP_INI_DIR/php.ini" \
+    && cp "/usr/local/etc/php/php.ini-{{ $prod ? 'production' : 'development' }}" "/usr/local/etc/php/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm -rf /var/cache/apk/* /tmp/* /src
+    && su-exec fwd composer global require hirak/prestissimo \
+    && rm -rf /var/cache/apk/* /tmp/* /src /home/fwd/.composer/cache
 
-COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
-
-RUN adduser -D -u 1337 fwd && \
-    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
-    su-exec fwd composer global require hirak/prestissimo
+COPY fwd.ini /usr/local/etc/php/conf.d/fwd.ini
+COPY zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 
 COPY entrypoint /entrypoint
 RUN chmod +x /entrypoint
