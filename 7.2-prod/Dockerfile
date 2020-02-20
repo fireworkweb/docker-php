@@ -21,6 +21,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
     && docker-php-ext-enable imagick redis \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
+        calendar \
         exif \
         gd \
         intl \
