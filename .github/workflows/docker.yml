@@ -17,9 +17,10 @@ jobs:
       run: docker build --pull -t fireworkweb/php:${{ matrix.version }} ${{ matrix.version }}
 
     - name: Test
-      env:
-        MASTER_TAG: ${{ contains(matrix.version, 'prod') ? 'prod' : 'latest' }}
-      run: echo $MASTER_TAG
+      if: matrix.version == '7.4-prod' || matrix.version == '7.4'
+      run:
+        export MASTER_TAG=$([[ "${{ matrix.version }}" == "7.4-prod" ]] && echo "prod" || echo "latest")
+        echo $MASTER_TAG
 
     - name: Test docker images
       run: |
@@ -36,9 +37,9 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        MASTER_TAG: ${{ contains(matrix.version, 'prod') ? 'prod' : 'latest' }}
       run: |
-        docker tag fireworkweb/php:${{ matrix.version }} fireworkweb/php:$MASTER_TAG
+        # export MASTER_TAG=$([[ "${{ matrix.version }}" == *"prod"* ]] && echo "prod" || echo "latest")
+        # docker tag fireworkweb/php:${{ matrix.version }} fireworkweb/php:$MASTER_TAG
         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
         docker push fireworkweb/php:${{ matrix.version }}
         docker push fireworkweb/php:$MASTER_TAG
