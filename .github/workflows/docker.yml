@@ -18,7 +18,7 @@ jobs:
 
     - name: Test
       if: matrix.version == '7.4-prod' || matrix.version == '7.4'
-      run:
+      run: |
         export MASTER_TAG=$([[ "${{ matrix.version }}" == "7.4-prod" ]] && echo "prod" || echo "latest")
         echo $MASTER_TAG
 
