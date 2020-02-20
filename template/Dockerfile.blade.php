@@ -25,6 +25,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
 @endif
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
     && pecl install imagick-3.4.4 redis{{ ! $prod ? ' xdebug' : '' }} \
+    && docker-php-ext-configure calendar \
     && docker-php-ext-enable imagick redis \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
@@ -43,6 +44,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
+        calendar \
     && cp "$PHP_INI_DIR/php.ini-{{ $prod ? 'production' : 'development' }}" "$PHP_INI_DIR/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
