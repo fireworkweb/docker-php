@@ -68,8 +68,8 @@
             },
             "files": [
                 {
-                    "name": "Dockerfile-wkhtmltopdf",
-                    "path": "template/Dockerfile"
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
                 }
             ]
         },
@@ -140,8 +140,8 @@
             },
             "files": [
                 {
-                    "name": "Dockerfile-wkhtmltopdf",
-                    "path": "template/Dockerfile"
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
                 }
             ]
         },
@@ -212,8 +212,8 @@
             },
             "files": [
                 {
-                    "name": "Dockerfile-wkhtmltopdf",
-                    "path": "template/Dockerfile"
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
                 }
             ]
         },
@@ -284,8 +284,8 @@
             },
             "files": [
                 {
-                    "name": "Dockerfile-wkhtmltopdf",
-                    "path": "template/Dockerfile"
+                    "name": "Dockerfile",
+                    "path": "template/Dockerfile-wkhtmltopdf"
                 }
             ]
         }
