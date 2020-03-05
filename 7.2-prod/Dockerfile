@@ -1,11 +1,18 @@
 FROM php:7.2-fpm-alpine
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
-ARG ASUSER
+ENV ASUSER 0
+
+ENV PHP_MEMORY_LIMIT 256M
+ENV PHP_UPLOAD_MAX_FILESIZE 10M
+ENV PHP_POST_MAX_SIZE 10M
 
 WORKDIR /app
 
-RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
+RUN wget https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-alpine-linux-amd64-v0.6.1.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-v0.6.1.tar.gz \
+    && rm dockerize-alpine-linux-amd64-v0.6.1.tar.gz \
+    && apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         freetype libpng libjpeg-turbo libzip-dev imagemagick \
         jpegoptim optipng pngquant gifsicle libldap \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
@@ -40,7 +47,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/cache/apk/* /tmp/* /src
 
-COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
+COPY fwd.ini /fwd/fwd.tmpl
 
 RUN adduser -D -u 1337 fwd && \
     sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
@@ -51,5 +58,5 @@ RUN chmod +x /entrypoint
 
 EXPOSE 9000
 
-ENTRYPOINT [ "/entrypoint" ]
+ENTRYPOINT [ "dockerize", "-template", "/fwd/fwd.tmpl:/usr/local/etc/php/conf.d/fwd.ini", "/entrypoint" ]
 CMD [ "php-fpm" ]
