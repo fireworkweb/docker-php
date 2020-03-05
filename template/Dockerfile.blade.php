@@ -51,7 +51,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize
         soap \
         xml \
         zip \
-    && cp "$PHP_INI_DIR/php.ini-{{ $prod ? 'production' : 'development' }}" "$PHP_INI_DIR/php.ini" \
+    && cp "/usr/local/etc/php/php.ini-{{ $prod ? 'production' : 'development' }}" "/usr/local/etc/php/php.ini" \
     && apk del .build-deps \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && rm -rf /var/cache/apk/* /tmp/* /src
