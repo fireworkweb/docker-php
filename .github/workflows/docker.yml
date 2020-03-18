@@ -41,7 +41,12 @@ jobs:
         docker push fireworkweb/php:${{ matrix.version }}
 
         if [[ "${{ matrix.version }}" == *"7.4"* ]]; then
-          export MASTER_TAG=$([[ "${{ matrix.version }}" == "7.4-prod" ]] && echo "prod" || echo "latest")
+          if [[ "${{ matrix.version }}" == *"wkhtmltopdf"* ]]; then
+            export MASTER_TAG=$([[ "${{ matrix.version }}" == *"prod"* ]] && echo "wkhtmltopdf-prod" || echo "wkhtmltopdf")
+          else
+            export MASTER_TAG=$([[ "${{ matrix.version }}" == "7.4-prod" ]] && echo "prod" || echo "latest")
+          fi
+
           docker tag fireworkweb/php:${{ matrix.version }} fireworkweb/php:$MASTER_TAG
           docker push fireworkweb/php:$MASTER_TAG
         fi
