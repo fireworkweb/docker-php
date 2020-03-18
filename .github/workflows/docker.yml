@@ -27,9 +27,14 @@ jobs:
         docker run fireworkweb/php:${{ matrix.version }} composer -V
         docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} php -v
         docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} composer -V
-
         docker run fireworkweb/php:${{ matrix.version }} php -m
         docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} php -m
+
+        if [[ "${{ matrix.version }}" == *"wkhtmltopdf"* ]]; then
+          docker run fireworkweb/php:${{ matrix.version }} wkhtmltopdf -V
+          docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} wkhtmltopdf -V
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} wkhtmltopdf -V
+        fi
 
     - name: Push to Hub
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
