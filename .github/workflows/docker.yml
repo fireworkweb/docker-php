@@ -27,9 +27,14 @@ jobs:
         docker run fireworkweb/php:${{ matrix.version }} composer -V
         docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} php -v
         docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} composer -V
-
         docker run fireworkweb/php:${{ matrix.version }} php -m
         docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} php -m
+
+        if [[ "${{ matrix.version }}" == *"wkhtmltopdf"* ]]; then
+          docker run fireworkweb/php:${{ matrix.version }} wkhtmltopdf -V
+          docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} wkhtmltopdf -V
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} wkhtmltopdf -V
+        fi
 
     - name: Push to Hub
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -39,3 +44,14 @@ jobs:
       run: |
         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
         docker push fireworkweb/php:${{ matrix.version }}
+
+        if [[ "${{ matrix.version }}" == *"7.4"* ]]; then
+          if [[ "${{ matrix.version }}" == *"wkhtmltopdf"* ]]; then
+            export MASTER_TAG=$([[ "${{ matrix.version }}" == *"prod"* ]] && echo "wkhtmltopdf-prod" || echo "wkhtmltopdf")
+          else
+            export MASTER_TAG=$([[ "${{ matrix.version }}" == "7.4-prod" ]] && echo "prod" || echo "latest")
+          fi
+
+          docker tag fireworkweb/php:${{ matrix.version }} fireworkweb/php:$MASTER_TAG
+          docker push fireworkweb/php:$MASTER_TAG
+        fi
