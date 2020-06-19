@@ -7,7 +7,7 @@ if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
     usermod -u $ASUSER fwd
 fi
 
-if [ "$1" = "php-fpm" ]; then
+if [ "$1" = "bash" ] || [ "$1" = "nginx" ] || [ "$1" = "php-fpm" ] || [ "$1" = "supervisord" ]; then
     exec "$@"
 else
     exec su-exec fwd "$@"
