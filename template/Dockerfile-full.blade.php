@@ -1,4 +1,4 @@
-FROM fireworkweb/php:7.4-nginx
+FROM {{ $from }}
 
 RUN apk add --no-cache nodejs npm yarn \
     g++ \
