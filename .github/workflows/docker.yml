@@ -28,6 +28,11 @@ jobs:
         docker build -t fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf ${{ matrix.version }}-nginx-wkhtmltopdf
         docker build -t fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf-prod ${{ matrix.version }}-nginx-wkhtmltopdf-prod
 
+        docker build -t fireworkweb/php:${{ matrix.version }}-full ${{ matrix.version }}-full
+        docker build -t fireworkweb/php:${{ matrix.version }}-full-prod ${{ matrix.version }}-full-prod
+        docker build -t fireworkweb/php:${{ matrix.version }}-full-wkhtmltopdf ${{ matrix.version }}-full-wkhtmltopdf
+        docker build -t fireworkweb/php:${{ matrix.version }}-full-wkhtmltopdf-prod ${{ matrix.version }}-full-wkhtmltopdf-prod
+
     - name: Test docker images
       run: |
         for suffix in '' -prod -wkhtmltopdf -wkhtmltopdf-prod; do
@@ -42,7 +47,7 @@ jobs:
     - name: Test docker images nginx
       if: matrix.version == '7.4'
       run: |
-        for suffix in -nginx -nginx-prod -nginx-wkhtmltopdf -nginx-wkhtmltopdf-prod; do
+        for suffix in -nginx -nginx-prod -nginx-wkhtmltopdf -nginx-wkhtmltopdf-prod -full -full-prod -full-wkhtmltopdf -full-wkhtmltopdf-prod; do
           docker run fireworkweb/php:${{ matrix.version }}$suffix php -v
           docker run fireworkweb/php:${{ matrix.version }}$suffix composer -V
           docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }}$suffix php -v
@@ -76,3 +81,8 @@ jobs:
         docker push fireworkweb/php:${{ matrix.version }}-nginx-prod
         docker push fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf
         docker push fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf-prod
+
+        docker push fireworkweb/php:${{ matrix.version }}-full
+        docker push fireworkweb/php:${{ matrix.version }}-full-prod
+        docker push fireworkweb/php:${{ matrix.version }}-full-wkhtmltopdf
+        docker push fireworkweb/php:${{ matrix.version }}-full-wkhtmltopdf-prod
