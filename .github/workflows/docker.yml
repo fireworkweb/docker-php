@@ -6,6 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       matrix:
         version: [
           7.1, 7.1-prod, 7.1-wkhtmltopdf, 7.1-wkhtmltopdf-prod,
