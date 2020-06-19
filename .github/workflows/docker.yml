@@ -30,13 +30,28 @@ jobs:
 
     - name: Test docker images
       run: |
-        docker run fireworkweb/php:${{ matrix.version }} php -v
-        docker run fireworkweb/php:${{ matrix.version }} composer -V
-        docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} php -v
-        docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }} composer -V
+        for suffix in '' -prod -wkhtmltopdf -wkhtmltopdf-prod; do
+          docker run fireworkweb/php:${{ matrix.version }}$suffix php -v
+          docker run fireworkweb/php:${{ matrix.version }}$suffix composer -V
+          docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }}$suffix php -v
+          docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }}$suffix composer -V
+          docker run fireworkweb/php:${{ matrix.version }}$suffix php -m
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }}$suffix php -m
+        done
 
-        docker run fireworkweb/php:${{ matrix.version }} php -m
-        docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }} php -m
+    - name: Test docker images nginx
+      if: matrix.version == '7.4'
+      run: |
+        for suffix in -nginx -nginx-prod -nginx-wkhtmltopdf -nginx-wkhtmltopdf-prod; do
+          docker run fireworkweb/php:${{ matrix.version }}$suffix php -v
+          docker run fireworkweb/php:${{ matrix.version }}$suffix composer -V
+          docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }}$suffix php -v
+          docker run -e ASUSER=1000 fireworkweb/php:${{ matrix.version }}$suffix composer -V
+          docker run fireworkweb/php:${{ matrix.version }}$suffix php -m
+          docker run -e ENABLE_XDEBUG=true fireworkweb/php:${{ matrix.version }}$suffix php -m
+          docker run fireworkweb/php:${{ matrix.version }}$suffix nginx -v
+          docker run fireworkweb/php:${{ matrix.version }}$suffix supervisord version
+        done
 
     - name: Push to Hub
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
