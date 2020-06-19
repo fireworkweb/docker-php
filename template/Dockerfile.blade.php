@@ -1,20 +1,30 @@
 FROM {{ $from }}
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ARG ASUSER
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+    ASUSER=0 \
 @unless ($prod)
-ARG ENABLE_XDEBUG=false
+    ENABLE_XDEBUG=false \
 @endunless
+    PHP_MEMORY_LIMIT=256M \
+    PHP_UPLOAD_MAX_FILESIZE=10M \
+    PHP_POST_MAX_SIZE=10M
 
 WORKDIR /app
 
-RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
+RUN adduser -D -u 1337 fwd \
+    # dockerize
+    && curl -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-alpine-linux-amd64-v0.6.1.tar.gz | tar xz \
+    && mv dockerize /usr/local/bin/dockerize \
+    # deps
+    && apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         freetype libpng libjpeg-turbo libzip-dev imagemagick \
         jpegoptim optipng pngquant gifsicle libldap \
+    # build-deps
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
         freetype-dev libpng-dev libjpeg-turbo-dev \
         icu-dev libedit-dev libxml2-dev \
-        imagemagick-dev openldap-dev{{ version_compare($version, '7.4', '>=') ? ' oniguruma-dev' : '' }} \
+        imagemagick-dev openldap-dev {{ version_compare($version, '7.4', '>=') ? 'oniguruma-dev' : '' }} \
+    # php-ext
 @if (version_compare($version, '7.4', '>='))
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
 @else
@@ -24,7 +34,7 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         --with-jpeg-dir=/usr/include/ \
 @endif
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    && pecl install imagick-3.4.4 redis{{ ! $prod ? ' xdebug' : '' }} \
+    && pecl install imagick-3.4.4 redis {{ ! $prod ? 'xdebug' : '' }} \
     && docker-php-ext-enable imagick redis \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
@@ -44,21 +54,20 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
-    && cp "$PHP_INI_DIR/php.ini-{{ $prod ? 'production' : 'development' }}" "$PHP_INI_DIR/php.ini" \
-    && apk del .build-deps \
+    && cp "/usr/local/etc/php/php.ini-{{ $prod ? 'production' : 'development' }}" "/usr/local/etc/php/php.ini" \
+    && sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf \
+    # composer
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm -rf /var/cache/apk/* /tmp/* /src
+    && su-exec fwd composer global require hirak/prestissimo \
+    # cleanup
+    && apk del .build-deps \
+    && rm -rf /var/cache/apk/* /tmp/* /home/fwd/.composer/cache
 
-COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
-
-RUN adduser -D -u 1337 fwd && \
-    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
-    su-exec fwd composer global require hirak/prestissimo
-
-COPY entrypoint /entrypoint
-RUN chmod +x /entrypoint
+COPY fwd.ini /fwd/fwd.tmpl
+COPY entrypoint /fwd/entrypoint
+RUN chmod +x /fwd/entrypoint
 
 EXPOSE 9000
 
-ENTRYPOINT [ "/entrypoint" ]
+ENTRYPOINT [ "dockerize", "-template", "/fwd/fwd.tmpl:/usr/local/etc/php/conf.d/fwd.ini", "/fwd/entrypoint" ]
 CMD [ "php-fpm" ]

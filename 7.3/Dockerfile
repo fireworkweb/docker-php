@@ -1,18 +1,28 @@
 FROM php:7.3-fpm-alpine
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ARG ASUSER
-ARG ENABLE_XDEBUG=false
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+    ASUSER=0 \
+    ENABLE_XDEBUG=false \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_UPLOAD_MAX_FILESIZE=10M \
+    PHP_POST_MAX_SIZE=10M
 
 WORKDIR /app
 
-RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
+RUN adduser -D -u 1337 fwd \
+    # dockerize
+    && curl -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-alpine-linux-amd64-v0.6.1.tar.gz | tar xz \
+    && mv dockerize /usr/local/bin/dockerize \
+    # deps
+    && apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         freetype libpng libjpeg-turbo libzip-dev imagemagick \
         jpegoptim optipng pngquant gifsicle libldap \
+    # build-deps
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
         freetype-dev libpng-dev libjpeg-turbo-dev \
         icu-dev libedit-dev libxml2-dev \
-        imagemagick-dev openldap-dev \
+        imagemagick-dev openldap-dev  \
+    # php-ext
     && docker-php-ext-configure gd \
         --with-freetype-dir=/usr/include/ \
         --with-png-dir=/usr/include/ \
@@ -35,21 +45,20 @@ RUN apk --no-cache add su-exec bash git openssh-client icu shadow procps \
         soap \
         xml \
         zip \
-    && cp "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
-    && apk del .build-deps \
+    && cp "/usr/local/etc/php/php.ini-development" "/usr/local/etc/php/php.ini" \
+    && sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf \
+    # composer
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && rm -rf /var/cache/apk/* /tmp/* /src
+    && su-exec fwd composer global require hirak/prestissimo \
+    # cleanup
+    && apk del .build-deps \
+    && rm -rf /var/cache/apk/* /tmp/* /home/fwd/.composer/cache
 
-COPY fwd.ini $PHP_INI_DIR/conf.d/fwd.ini
-
-RUN adduser -D -u 1337 fwd && \
-    sed -i "s/user\ \=.*/user\ \= fwd/g" /usr/local/etc/php-fpm.d/www.conf && \
-    su-exec fwd composer global require hirak/prestissimo
-
-COPY entrypoint /entrypoint
-RUN chmod +x /entrypoint
+COPY fwd.ini /fwd/fwd.tmpl
+COPY entrypoint /fwd/entrypoint
+RUN chmod +x /fwd/entrypoint
 
 EXPOSE 9000
 
-ENTRYPOINT [ "/entrypoint" ]
+ENTRYPOINT [ "dockerize", "-template", "/fwd/fwd.tmpl:/usr/local/etc/php/conf.d/fwd.ini", "/fwd/entrypoint" ]
 CMD [ "php-fpm" ]
