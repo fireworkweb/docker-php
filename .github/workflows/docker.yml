@@ -8,19 +8,26 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        version: [
-          7.1, 7.1-prod, 7.1-wkhtmltopdf, 7.1-wkhtmltopdf-prod,
-          7.2, 7.2-prod, 7.2-wkhtmltopdf, 7.2-wkhtmltopdf-prod,
-          7.3, 7.3-prod, 7.3-wkhtmltopdf, 7.3-wkhtmltopdf-prod,
-          7.4, 7.4-prod, 7.4-nginx, 7.4-nginx-prod, 7.4-nginx-wkhtmltopdf, 7.4-nginx-wkhtmltopdf-prod, 7.4-wkhtmltopdf, 7.4-wkhtmltopdf-prod,
-        ]
+        version: [ 7.1, 7.2, 7.3, 7.4 ]
 
     steps:
     - name: Checkout code
       uses: actions/checkout@master
 
-    - name: Build image
-      run: docker build --pull -t fireworkweb/php:${{ matrix.version }} ${{ matrix.version }}
+    - name: Build images
+      run: |
+        docker build --pull -t fireworkweb/php:${{ matrix.version }} ${{ matrix.version }}
+        docker build --pull -t fireworkweb/php:${{ matrix.version }}-prod ${{ matrix.version }}-prod
+        docker build -t fireworkweb/php:${{ matrix.version }}-wkhtmltopdf ${{ matrix.version }}-wkhtmltopdf
+        docker build -t fireworkweb/php:${{ matrix.version }}-wkhtmltopdf-prod ${{ matrix.version }}-wkhtmltopdf-prod
+
+    - name: Build images nginx
+      if: matrix.version == '7.4'
+      run: |
+        docker build -t fireworkweb/php:${{ matrix.version }}-nginx ${{ matrix.version }}-nginx
+        docker build -t fireworkweb/php:${{ matrix.version }}-nginx-prod ${{ matrix.version }}-nginx-prod
+        docker build -t fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf ${{ matrix.version }}-nginx-wkhtmltopdf
+        docker build -t fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf-prod ${{ matrix.version }}-nginx-wkhtmltopdf-prod
 
     - name: Test docker images
       run: |
@@ -40,3 +47,18 @@ jobs:
       run: |
         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
         docker push fireworkweb/php:${{ matrix.version }}
+        docker push fireworkweb/php:${{ matrix.version }}-prod
+        docker push fireworkweb/php:${{ matrix.version }}-wkhtmltopdf
+        docker push fireworkweb/php:${{ matrix.version }}-wkhtmltopdf-prod
+
+    - name: Push to Hub nginx
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master' && matrix.version == '7.4'
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        docker push fireworkweb/php:${{ matrix.version }}-nginx
+        docker push fireworkweb/php:${{ matrix.version }}-nginx-prod
+        docker push fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf
+        docker push fireworkweb/php:${{ matrix.version }}-nginx-wkhtmltopdf-prod
