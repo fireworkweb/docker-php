@@ -14,9 +14,13 @@ docker build -t fireworkweb/php:7.3-wkhtmltopdf 7.3-wkhtmltopdf
 docker build -t fireworkweb/php:7.3-wkhtmltopdf-prod 7.3-wkhtmltopdf-prod
 docker build --pull -t fireworkweb/php:7.4 7.4
 docker build --pull -t fireworkweb/php:7.4-prod 7.4-prod
+docker build -t fireworkweb/php:7.4-wkhtmltopdf 7.4-wkhtmltopdf
+docker build -t fireworkweb/php:7.4-wkhtmltopdf-prod 7.4-wkhtmltopdf-prod
 docker build -t fireworkweb/php:7.4-nginx 7.4-nginx
 docker build -t fireworkweb/php:7.4-nginx-prod 7.4-nginx-prod
 docker build -t fireworkweb/php:7.4-nginx-wkhtmltopdf 7.4-nginx-wkhtmltopdf
 docker build -t fireworkweb/php:7.4-nginx-wkhtmltopdf-prod 7.4-nginx-wkhtmltopdf-prod
-docker build -t fireworkweb/php:7.4-wkhtmltopdf 7.4-wkhtmltopdf
-docker build -t fireworkweb/php:7.4-wkhtmltopdf-prod 7.4-wkhtmltopdf-prod
+docker build -t fireworkweb/php:7.4-full 7.4-full
+docker build -t fireworkweb/php:7.4-full-prod 7.4-full-prod
+docker build -t fireworkweb/php:7.4-full-wkhtmltopdf 7.4-full-wkhtmltopdf
+docker build -t fireworkweb/php:7.4-full-wkhtmltopdf-prod 7.4-full-wkhtmltopdf-prod

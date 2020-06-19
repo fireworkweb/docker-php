@@ -5,4 +5,4 @@ RUN apk add --no-cache nodejs npm yarn \
     libpng-dev \
     make \
     zlib-dev \
-    python
+    python3
