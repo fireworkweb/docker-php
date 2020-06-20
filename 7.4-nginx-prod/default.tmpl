@@ -10,10 +10,10 @@ server {
 
     client_max_body_size {{ .Env.NGINX_CLIENT_MAX_BODY_SIZE }};
 
-    error_page 404 /index.php
+    error_page 404 /index.php;
 
     location / {
-        try_files $uri $uri/ /index.php?$query_string
+        try_files $uri $uri/ /index.php?$query_string;
 
         add_header X-Served-By FWD;
     }

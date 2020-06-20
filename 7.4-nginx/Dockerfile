@@ -10,9 +10,9 @@ RUN curl -L https://github.com/ochinchina/supervisord/releases/download/v0.6.3/s
     && chmod +x /usr/local/bin/supervisord \
     && apk add --no-cache nginx \
     && sed -i "s|^listen\ \=.*|listen\ \= $PHP_FPM_LISTEN|g" /usr/local/etc/php-fpm.d/zz-docker.conf \
-    && sed -i "s|^user .*|user\ fwd;|g" /etc/nginx/nginx.conf \
-    && ln -sf /dev/stdout /var/log/nginx/access.log \
-    && ln -sf /dev/stderr /var/log/nginx/error.log
+    && echo "listen.owner = fwd" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "listen.group = fwd" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && sed -i "s|^user .*|user\ fwd fwd;|g" /etc/nginx/nginx.conf
 
 COPY supervisor.conf /fwd/supervisor.conf
 COPY default.tmpl /fwd/default.tmpl
