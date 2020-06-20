@@ -2,7 +2,7 @@ server {
     listen @{{ .Env.NGINX_LISTEN }} default_server;
     server_name _;
     root @{{ .Env.NGINX_ROOT }};
-    index {{ $version === 'php' ? 'index.php' : 'index.html' }};
+    index index.php;
     charset utf-8;
 
     location = /favicon.ico { log_not_found off; access_log off; }
@@ -10,10 +10,10 @@ server {
 
     client_max_body_size @{{ .Env.NGINX_CLIENT_MAX_BODY_SIZE }};
 
-    error_page 404 /{{ $version === 'php' ? 'index.php' : 'index.html' }};
+    error_page 404 /index.php
 
     location / {
-        try_files $uri $uri/ /{{ $version === 'php' ? 'index.php?$query_string' : 'index.html' }};
+        try_files $uri $uri/ /index.php?$query_string
 
         add_header X-Served-By FWD;
     }
