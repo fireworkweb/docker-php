@@ -16,6 +16,11 @@ if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
     usermod -u $ASUSER fwd
 fi
 
+# Run entrypoint if provided
+if [ ! -z "$ENTRYPOINT" ] && [ -f "$ENTRYPOINT" ]; then
+    bash $ENTRYPOINT
+fi
+
 if [ "$1" = "bash" ] || [ "$1" = "nginx" ] || [ "$1" = "php-fpm" ] || [ "$1" = "supervisord" ]; then
     exec "$@"
 else
