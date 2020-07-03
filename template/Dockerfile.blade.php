@@ -1,7 +1,8 @@
 FROM {{ $from }}
 
-ENV COMPOSER_ALLOW_SUPERUSER=1 \
-    ASUSER=0 \
+ENV ASUSER= \
+    UID= \
+    COMPOSER_ALLOW_SUPERUSER=1 \
 @unless ($prod)
     ENABLE_XDEBUG=false \
 @endunless

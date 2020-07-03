@@ -14,8 +14,10 @@ fi
 @endunless
 
 # Run as current user
-if [ ! -z "$ASUSER" ] && [ "$ASUSER" != "0" ]; then
-    usermod -u $ASUSER fwd
+CURRENT_USER=${ASUSER:-${UID:-0}}
+
+if [ ! -z "$CURRENT_USER" ] && [ "$CURRENT_USER" != "0" ]; then
+    usermod -u $CURRENT_USER fwd
 fi
 
 # Run entrypoint if provided
@@ -23,7 +25,7 @@ if [ ! -z "$ENTRYPOINT" ] && [ -f "$ENTRYPOINT" ]; then
     bash $ENTRYPOINT
 fi
 
-if [ "$1" = "bash" ] || [ "$1" = "nginx" ] || [ "$1" = "php-fpm" ] || [ "$1" = "supervisord" ]; then
+if [ "$1" = "bash" ] || [ "$1" = "php-fpm" ] || [ "$1" = "nginx" ] || [ "$1" = "supervisord" ]; then
     exec "$@"
 else
     exec su-exec fwd "$@"
