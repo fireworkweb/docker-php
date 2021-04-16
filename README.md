@@ -1,4 +1,14 @@
-# fireworkweb/docker-php
+### fireworkweb/docker-php
+
+# ATTENTION - THIS REPO MOVED TO [kool-dev/docker-php](https://github.com/kool-dev/docker-php)
+
+> `fwd` is dead, long live [`kool` (check it out now!)](https://github.com/kool-dev/kool)
+
+This repository is deprecated and archived in favour of Kool maintened PHP images: https://github.com/kool-dev/docker-php
+
+Below you will find original `fireworkweb/docker-php` README for the sake of historic value.
+
+---
 
 ![TravisCI](https://travis-ci.com/fireworkweb/docker-php.svg?branch=master)
 
